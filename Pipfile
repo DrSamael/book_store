@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = {extras = ["standard"], version = "==0.121.2"}
+uvicorn = "==0.40.0"
+pydantic-settings = "==2.12.0"
+alembic = "==1.17.2"
+sqlalchemy = "==2.0.45"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"
+python_full_version = "3.13.3"
