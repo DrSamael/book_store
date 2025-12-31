@@ -6,10 +6,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 
-router = APIRouter(
-    prefix="/books",
-    tags=["Books"],
-)
+router = APIRouter(prefix="/books", tags=["Books"])
 
 
 # @router.get(

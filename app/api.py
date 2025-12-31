@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
 from app.books import routers as books_router
+from app.genres import routers as genres_router
 
 
 class ErrorResponse(BaseModel):
@@ -22,3 +23,4 @@ api_router = APIRouter(
 )
 
 api_router.include_router(books_router.router)
+api_router.include_router(genres_router.router)

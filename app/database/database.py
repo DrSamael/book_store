@@ -13,7 +13,7 @@ from app.config import get_settings
 settings = get_settings()
 
 print(settings.DATABASE_URI)
-engine = create_engine(settings.DATABASE_URI, echo=True)
+engine = create_engine(settings.DATABASE_URI, echo=False)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 int_pk = Annotated[int, mapped_column(primary_key=True, index=True)]
