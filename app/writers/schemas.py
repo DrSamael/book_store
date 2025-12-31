@@ -6,7 +6,7 @@ from app.schemas.shared import BookBaseSchema, GenreBaseSchema, WriterBaseSchema
 
 class WriterCreateSchema(BaseModel):
     name: str
-    genre_ids: List[int]
+    genre_ids: List[int] = []
 
 
 class WriterResponseSchema(WriterBaseSchema):

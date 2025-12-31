@@ -4,6 +4,7 @@ from starlette.responses import JSONResponse
 
 from app.books import routers as books_router
 from app.genres import routers as genres_router
+from app.writers import routers as writers_router
 
 
 class ErrorResponse(BaseModel):
@@ -24,3 +25,4 @@ api_router = APIRouter(
 
 api_router.include_router(books_router.router)
 api_router.include_router(genres_router.router)
+api_router.include_router(writers_router.router)
