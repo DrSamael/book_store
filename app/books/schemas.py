@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import List
 
 from app.schemas.shared import WriterBaseSchema, GenreBaseSchema, BookBaseSchema
@@ -6,8 +6,8 @@ from app.schemas.shared import WriterBaseSchema, GenreBaseSchema, BookBaseSchema
 
 class BookCreateSchema(BaseModel):
     title: str
-    writer_ids: List[int]
-    genre_ids: List[int]
+    writer_ids: List[int] = Field(..., min_items=1)
+    genre_ids: List[int] = Field(..., min_items=1)
 
 
 class BookResponseSchema(BookBaseSchema):

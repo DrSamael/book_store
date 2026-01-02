@@ -1,6 +1,9 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session, selectinload
+from starlette import status
 
 from app.books.models import Book
+from app.errors.messages import GENRES_NOT_FOUND, WRITERS_NOT_FOUND
 from app.genres.models import Genre
 from app.writers.models import Writer
 
@@ -9,18 +12,13 @@ def add_book(db: Session, data: dict) -> Book:
     allowed_fields = set(Book.__table__.columns.keys())
     allowed_fields.discard("id")
     book_data = {k: v for k, v in data.items() if k in allowed_fields}
-
     book = Book(**book_data)
 
-    genre_ids = data.get("genre_ids")
-    if genre_ids:
-        genres = db.query(Genre).filter(Genre.id.in_(genre_ids)).all()
-        book.genres.extend(genres)
+    writers = _get_writers(db, data.get("writer_ids"))
+    book.writers.extend(writers)
 
-    writer_ids = data.get("writer_ids")
-    if writer_ids:
-        writers = db.query(Writer).filter(Writer.id.in_(writer_ids)).all()
-        book.writers.extend(writers)
+    genres = _get_genres(db, data.get("genre_ids"))
+    book.genres.extend(genres)
 
     db.add(book)
     db.commit()
@@ -59,19 +57,11 @@ def update_book(db: Session, book: Book, data: dict) -> Book:
             setattr(book, key, value)
 
     if "writer_ids" in data:
-        writers = (
-            db.query(Writer)
-            .filter(Writer.id.in_(data["writer_ids"]))
-            .all()
-        )
+        writers = _get_writers(db, data.get("writer_ids"))
         book.writers = writers
 
     if "genre_ids" in data:
-        genres = (
-            db.query(Genre)
-            .filter(Genre.id.in_(data["genre_ids"]))
-            .all()
-        )
+        genres = _get_genres(db, data.get("genre_ids"))
         book.genres = genres
 
     db.commit()
@@ -83,3 +73,27 @@ def update_book(db: Session, book: Book, data: dict) -> Book:
 def delete_book(db: Session, book: Book) -> None:
     db.delete(book)
     db.commit()
+
+
+def _get_genres(db: Session, genre_ids: list):
+    genres = (
+        db.query(Genre)
+        .filter(Genre.id.in_(genre_ids))
+        .all()
+    )
+    if len(genres) != len(genre_ids):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=GENRES_NOT_FOUND)
+
+    return genres
+
+
+def _get_writers(db: Session, writer_ids: list):
+    writers = (
+        db.query(Writer)
+        .filter(Writer.id.in_(writer_ids))
+        .all()
+    )
+    if len(writers) != len(writer_ids):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=WRITERS_NOT_FOUND)
+
+    return writers
