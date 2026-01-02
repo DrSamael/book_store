@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List
 
 from app.schemas.shared import WriterBaseSchema, GenreBaseSchema, BookBaseSchema
@@ -16,3 +16,11 @@ class BookResponseSchema(BookBaseSchema):
 
     class Config:
         from_attributes = True
+
+
+class BookUpdateSchema(BaseModel):
+    title: str | None = None
+    writer_ids: List[int] | None = None
+    genre_ids: List[int] | None = None
+
+    model_config = ConfigDict(extra="forbid")
