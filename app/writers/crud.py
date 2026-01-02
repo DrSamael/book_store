@@ -18,6 +18,6 @@ def create_writer(db: Session, data: dict) -> Writer:
 
     db.add(writer)
     db.commit()
-
     db.refresh(writer)
+
     return writer

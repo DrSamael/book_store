@@ -10,7 +10,7 @@ class BookCreateSchema(BaseModel):
     genre_ids: List[int]
 
 
-class BookResponse(BookBaseSchema):
+class BookResponseSchema(BookBaseSchema):
     writers: List[WriterBaseSchema]
     genres: List[GenreBaseSchema]
 
