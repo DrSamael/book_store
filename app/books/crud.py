@@ -1,6 +1,4 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session, selectinload
-from starlette import status
 
 from app.books.models import Book
 from app.genres.models import Genre
@@ -54,7 +52,7 @@ def fetch_book_by_id(db: Session, book_id: int) -> type[Book]:
     )
 
 
-def update_book(db: Session, book: type[Book], data: dict) -> type[Book]:
+def update_book(db: Session, book: Book, data: dict) -> Book:
     book_fields = set(Book.__table__.columns.keys())
     for key, value in data.items():
         if key in book_fields:
@@ -80,3 +78,8 @@ def update_book(db: Session, book: type[Book], data: dict) -> type[Book]:
     db.refresh(book)
 
     return book
+
+
+def delete_book(db: Session, book: Book) -> None:
+    db.delete(book)
+    db.commit()

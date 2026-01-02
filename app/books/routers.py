@@ -1,11 +1,12 @@
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from starlette import status
 
-from app.books.crud import add_book, fetch_all_books, fetch_book_by_id, update_book
+from app.books.crud import add_book, fetch_all_books, update_book, delete_book
+from app.books.dependecies import get_book
+from app.books.models import Book
 from app.database.database import get_db
 from app.books.schemas import BookResponseSchema, BookCreateSchema, BookUpdateSchema
-from app.errors.messages import NOT_FOUND
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
@@ -30,16 +31,8 @@ async def create_book(
     description="Get a books by Id",
 )
 async def get_book_by_id(
-        book_id: int,
-        db: Session = Depends(get_db)
+        book: Book = Depends(get_book),
 ):
-    book = fetch_book_by_id(db, book_id)
-    if not book:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=NOT_FOUND,
-        )
-
     return book
 
 
@@ -62,15 +55,19 @@ async def get_all_books(
     description="Update a book",
 )
 def edit_book(
-        book_id: int,
         data: BookUpdateSchema,
+        book: Book = Depends(get_book),
         db: Session = Depends(get_db),
 ):
-    book = fetch_book_by_id(db, book_id)
-    if not book:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Book not found",
-        )
-
     return update_book(db, book, data.model_dump(exclude_unset=True))
+
+
+@router.delete(
+    "/{book_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_book_endpoint(
+        book: Book = Depends(get_book_by_id),
+        db: Session = Depends(get_db),
+):
+    delete_book(db, book)
