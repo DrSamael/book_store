@@ -1,4 +1,6 @@
-from sqlalchemy.orm import Session
+from typing import List
+
+from sqlalchemy.orm import Session, selectinload
 
 from app.books.models import Book
 from app.genres.models import Genre
@@ -27,3 +29,14 @@ def create_book(db: Session, data: dict) -> Book:
     db.refresh(book)
 
     return book
+
+
+def fetch_all_books(db: Session) -> list[type[Book]]:
+    return (
+        db.query(Book)
+        .options(
+            selectinload(Book.writers),
+            selectinload(Book.genres),
+        )
+        .all()
+    )
