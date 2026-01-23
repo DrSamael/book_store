@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict, Field
 from typing import List
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.shared import WriterBaseSchema, GenreBaseSchema, BookBaseSchema
 

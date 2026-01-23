@@ -54,7 +54,7 @@ async def get_all_books(
     status_code=status.HTTP_200_OK,
     description="Update a book",
 )
-def edit_book(
+async def edit_book(
         data: BookUpdateSchema,
         book: Book = Depends(get_book),
         db: Session = Depends(get_db),
@@ -66,7 +66,7 @@ def edit_book(
     "/{book_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete_book_endpoint(
+async def delete_book_endpoint(
         book: Book = Depends(get_book_by_id),
         db: Session = Depends(get_db),
 ):
