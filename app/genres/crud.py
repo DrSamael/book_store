@@ -40,10 +40,10 @@ def fetch_all_genres(db: Session) -> list[type[Genre]]:
 def fetch_genre_by_id(db: Session, genre_id: int) -> type[Genre]:
     return (
         db.query(Genre)
-        .options(
-            selectinload(Genre.writers),
-            selectinload(Genre.books),
-        )
+        # .options(
+        #     selectinload(Genre.writers),
+        #     selectinload(Genre.books),
+        # )
         .filter(Genre.id == genre_id)
         .first()
     )

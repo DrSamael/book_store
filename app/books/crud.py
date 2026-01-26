@@ -37,10 +37,10 @@ def fetch_all_books(db: Session) -> list[type[Book]]:
 def fetch_book_by_id(db: Session, book_id: int) -> type[Book]:
     return (
         db.query(Book)
-        .options(
-            selectinload(Book.writers),
-            selectinload(Book.genres),
-        )
+        # .options(
+        #     selectinload(Book.writers),
+        #     selectinload(Book.genres),
+        # )
         .filter(Book.id == book_id)
         .first()
     )
