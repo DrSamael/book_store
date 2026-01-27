@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Text, Date
 from sqlalchemy.orm import relationship
 
 from app.associations.models import writer_genre, book_writer
@@ -10,6 +10,10 @@ class Writer(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    bio = Column(Text, nullable=True)
+    birth_date = Column(Date, nullable=True)
+    death_date = Column(Date, nullable=True)
+    country = Column(String(100), nullable=True)
 
     books = relationship(
         "Book",

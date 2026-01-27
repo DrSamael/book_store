@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel
 
 from app.books.models import BookStatus
@@ -22,6 +24,10 @@ class BookBaseSchema(BaseModel):
 class WriterBaseSchema(BaseModel):
     id: int
     name: str
+    bio: str | None = None
+    birth_date: date | None = None
+    death_date: date | None = None
+    country: str | None = None
 
     class Config:
         from_attributes = True
