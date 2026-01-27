@@ -12,7 +12,7 @@ router = APIRouter(prefix="/writers", tags=["Writers"])
 
 
 @router.post(
-    "/",
+    "",
     response_model=WriterResponseSchema,
     status_code=status.HTTP_201_CREATED,
 )
@@ -36,7 +36,7 @@ async def get_genre_by_id(
 
 
 @router.get(
-    "/",
+    "",
     response_model=list[WriterResponseSchema],
     status_code=status.HTTP_200_OK,
     description="Get all writers",

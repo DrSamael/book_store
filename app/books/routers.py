@@ -12,7 +12,7 @@ router = APIRouter(prefix="/books", tags=["Books"])
 
 
 @router.post(
-    "/",
+    "",
     response_model=BookResponseSchema,
     status_code=status.HTTP_201_CREATED,
     description="Create a new book",
@@ -37,7 +37,7 @@ async def get_book_by_id(
 
 
 @router.get(
-    "/",
+    "",
     response_model=list[BookResponseSchema],
     status_code=status.HTTP_200_OK,
     description="Get all books",

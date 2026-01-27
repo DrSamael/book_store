@@ -30,6 +30,8 @@ class WriterBaseSchema(BaseModel):
 class GenreBaseSchema(BaseModel):
     id: int
     name: str
+    slug: str
+    description: str | None = None
 
     class Config:
         from_attributes = True

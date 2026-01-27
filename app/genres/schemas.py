@@ -7,6 +7,8 @@ from app.schemas.shared import GenreBaseSchema, BookBaseSchema, WriterBaseSchema
 
 class GenreCreateSchema(BaseModel):
     name: str
+    slug: str
+    description: str | None = None
 
 
 class GenreResponseSchema(GenreBaseSchema):
@@ -19,6 +21,8 @@ class GenreResponseSchema(GenreBaseSchema):
 
 class GenreUpdateSchema(BaseModel):
     name: str | None = None
+    slug: str | None = None
+    description: str | None = None
     writer_ids: List[int] | None = None
     book_ids: List[int] | None = None
 
