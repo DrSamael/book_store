@@ -30,7 +30,7 @@ def upgrade() -> None:
     """)
 
     op.alter_column("genres", "slug", nullable=False)
-    op.create_unique_constraint("uq_genres_slug", "genres", ["slug"])
+    # op.create_unique_constraint("uq_genres_slug", "genres", ["slug"])
 
     op.add_column(
         "genres",
@@ -39,6 +39,6 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_constraint("uq_genres_slug", "genres", type_="unique")
+    # op.drop_constraint("uq_genres_slug", "genres", type_="unique")
     op.drop_column("genres", "description")
     op.drop_column("genres", "slug")
