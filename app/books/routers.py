@@ -7,6 +7,7 @@ from app.books.dependecies import get_book
 from app.books.models import Book
 from app.database.database import get_db
 from app.books.schemas import BookResponseSchema, BookCreateSchema, BookUpdateSchema, BookFilterSchema
+from app.schemas.shared import PaginatedResponse
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
@@ -38,7 +39,7 @@ async def get_book_by_id(
 
 @router.get(
     "",
-    response_model=list[BookResponseSchema],
+    response_model=PaginatedResponse[BookResponseSchema],
     status_code=status.HTTP_200_OK,
     description="Get all books",
 )

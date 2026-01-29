@@ -1,8 +1,12 @@
 from datetime import date
+from typing import Generic, List, TypeVar
 
 from pydantic import BaseModel
+from pydantic.generics import GenericModel
 
 from app.books.models import BookStatus
+
+T = TypeVar("T")
 
 
 class BookBaseSchema(BaseModel):
@@ -41,3 +45,12 @@ class GenreBaseSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class PaginatedResponse(GenericModel, Generic[T]):
+    items: List[T]
+
+    total: int
+    page: int
+    size: int
+    pages: int

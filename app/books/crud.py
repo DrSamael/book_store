@@ -5,6 +5,7 @@ from app.associations.crud import get_genres_by_ids, get_writers_by_ids
 from app.associations.models import book_genre, book_writer
 from app.books.models import Book
 from app.books.schemas import BookFilterSchema
+from app.settings.pagination import paginate
 
 
 def add_book(db: Session, data: dict) -> Book:
@@ -26,7 +27,7 @@ def add_book(db: Session, data: dict) -> Book:
     return book
 
 
-def fetch_all_books(db: Session, filters: BookFilterSchema) -> list[type[Book]]:
+def fetch_all_books(db: Session, filters: BookFilterSchema) -> dict:
     query = (
         db.query(Book)
         .options(
@@ -35,7 +36,6 @@ def fetch_all_books(db: Session, filters: BookFilterSchema) -> list[type[Book]]:
         )
     )
 
-    # 🔍 search
     if filters.q:
         query = query.filter(
             or_(
@@ -44,7 +44,6 @@ def fetch_all_books(db: Session, filters: BookFilterSchema) -> list[type[Book]]:
             )
         )
 
-    # 🎯 filters
     if filters.status:
         query = query.filter(Book.status == filters.status)
 
@@ -60,25 +59,18 @@ def fetch_all_books(db: Session, filters: BookFilterSchema) -> list[type[Book]]:
     if filters.rating_to:
         query = query.filter(Book.rating <= filters.rating_to)
 
-    # 🔗 genre filter (many-to-many)
     if filters.genre_id:
         genre_list = [genre.strip() for genre in filters.genre_id.split(",")]
         query = query.join(book_genre).filter(book_genre.c.genre_id.in_(genre_list))
 
-    # 🔗 writer filter (many-to-many)
     if filters.writer_id:
         writer_list = [writer.strip() for writer in filters.writer_id.split(",")]
         query = query.join(book_writer).filter(book_writer.c.writer_id.in_(writer_list))
 
-    # 📄 pagination
-    offset = (filters.page - 1) * filters.page_size
-
-    return (
-        query
-        .distinct()
-        .offset(offset)
-        .limit(filters.page_size)
-        .all()
+    return paginate(
+        query=query.distinct(),
+        page=filters.page,
+        size=filters.page_size,
     )
 
 
