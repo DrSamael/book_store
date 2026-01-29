@@ -42,3 +42,21 @@ class BookUpdateSchema(BaseModel):
     genre_ids: List[int] | None = None
 
     model_config = ConfigDict(extra="forbid")
+
+
+class BookFilterSchema(BaseModel):
+    q: str | None = None
+
+    genre_id: str | None = None
+    writer_id: str | None = None
+
+    status: BookStatus | None = None
+
+    published_year_from: int | None = Field(None, ge=0)
+    published_year_to: int | None = Field(None, ge=0)
+
+    rating_from: float | None = Field(None, ge=0, le=5)
+    rating_to: float | None = Field(None, ge=0, le=5)
+
+    page: int = Field(1, ge=1)
+    page_size: int = Field(20, ge=1, le=100)

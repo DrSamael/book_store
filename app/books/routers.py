@@ -6,7 +6,7 @@ from app.books.crud import add_book, fetch_all_books, update_book, delete_book
 from app.books.dependecies import get_book
 from app.books.models import Book
 from app.database.database import get_db
-from app.books.schemas import BookResponseSchema, BookCreateSchema, BookUpdateSchema
+from app.books.schemas import BookResponseSchema, BookCreateSchema, BookUpdateSchema, BookFilterSchema
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
@@ -43,9 +43,10 @@ async def get_book_by_id(
     description="Get all books",
 )
 async def get_all_books(
+        filters: BookFilterSchema = Depends(),
         db: Session = Depends(get_db)
 ):
-    return fetch_all_books(db)
+    return fetch_all_books(db, filters)
 
 
 @router.patch(
