@@ -2,11 +2,12 @@ from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from starlette import status
 
-from app.books.crud import add_book, fetch_all_books, update_book, delete_book
+from app.books.crud import add_book, fetch_all_books, update_book, delete_book, get_book_description
 from app.books.dependecies import get_book
 from app.books.models import Book
 from app.database.database import get_db
-from app.books.schemas import BookResponseSchema, BookCreateSchema, BookUpdateSchema, BookFilterSchema
+from app.books.schemas import (BookResponseSchema, BookCreateSchema, BookUpdateSchema,
+                               BookFilterSchema, BookDescriptionResponseSchema)
 from app.schemas.shared import PaginatedResponse
 
 router = APIRouter(prefix="/books", tags=["Books"])
@@ -35,6 +36,17 @@ async def get_book_by_id(
         book: Book = Depends(get_book),
 ):
     return book
+
+
+@router.get(
+    "/{book_id}/description",
+    response_model=BookDescriptionResponseSchema,
+)
+def get_description(
+        book_id: int,
+        db: Session = Depends(get_db),
+):
+    return get_book_description(db, book_id)
 
 
 @router.get(

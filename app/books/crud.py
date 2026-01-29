@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import or_
+from starlette import status
+from fastapi import HTTPException
 
 from app.associations.crud import get_genres_by_ids, get_writers_by_ids
 from app.associations.models import book_genre, book_writer
 from app.books.models import Book
 from app.books.schemas import BookFilterSchema
+from app.errors.messages import NOT_FOUND_ERROR
 from app.settings.pagination import paginate
 
 
@@ -84,6 +87,19 @@ def fetch_book_by_id(db: Session, book_id: int) -> type[Book]:
         .filter(Book.id == book_id)
         .first()
     )
+
+
+def get_book_description(db: Session, book_id: int):
+    book = (
+        db.query(Book.id, Book.description)
+        .filter(Book.id == book_id)
+        .first()
+    )
+
+    if not book:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND_ERROR)
+
+    return book
 
 
 def update_book(db: Session, book: Book, data: dict) -> Book:
