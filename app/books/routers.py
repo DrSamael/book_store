@@ -74,7 +74,7 @@ async def edit_book(
         book: Book = Depends(get_book),
         db: Session = Depends(get_db),
 ):
-    return update_book(db, book, data.model_dump(exclude_unset=True))
+    return await update_book(db, book, data.model_dump(exclude_unset=True))
 
 
 @router.delete(

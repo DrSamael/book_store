@@ -9,6 +9,7 @@ from app.books.models import Book
 from app.books.schemas import BookFilterSchema
 from app.errors.messages import NOT_FOUND_ERROR
 from app.settings.pagination import paginate
+from app.ws.manager import manager
 
 
 def add_book(db: Session, data: dict) -> Book:
@@ -102,7 +103,7 @@ def get_book_description(db: Session, book_id: int):
     return book
 
 
-def update_book(db: Session, book: Book, data: dict) -> Book:
+async def update_book(db: Session, book: Book, data: dict) -> Book:
     book_fields = set(Book.__table__.columns.keys())
     for key, value in data.items():
         if key in book_fields:
@@ -118,6 +119,14 @@ def update_book(db: Session, book: Book, data: dict) -> Book:
 
     db.commit()
     db.refresh(book)
+
+    await manager.broadcast(
+        {
+            "event": "book_updated",
+            "book_id": book.id,
+            "title": book.title,
+        }
+    )
 
     return book
 
