@@ -41,6 +41,7 @@ async def get_book_by_id(
 @router.get(
     "/{book_id}/description",
     response_model=BookDescriptionResponseSchema,
+    description="Get book description by Id",
 )
 def get_description(
         book_id: int,
