@@ -4,12 +4,12 @@ from app.ws.manager import manager
 router = APIRouter(prefix="/ws")
 
 
-@router.websocket("/books")
-async def books_ws(websocket: WebSocket):
-    await manager.connect(websocket)
+@router.websocket("/books/{book_id}")
+async def book_ws(websocket: WebSocket, book_id: int):
+    await manager.connect(book_id, websocket)
 
     try:
         while True:
-            await websocket.receive_text()
+            await websocket.receive_text()  # тримаємо зʼєднання
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
+        manager.disconnect(book_id, websocket)

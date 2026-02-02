@@ -120,7 +120,9 @@ async def update_book(db: Session, book: Book, data: dict) -> Book:
     db.commit()
     db.refresh(book)
 
-    await manager.broadcast(
+    # websocket push
+    await manager.notify_book(
+        book.id,
         {
             "event": "book_updated",
             "book_id": book.id,
