@@ -119,10 +119,6 @@ async def update_book(db: Session, book: Book, data: dict) -> Book:
         if key in book_fields:
             setattr(book, key, value)
 
-    for key, value in data.items():
-        if key in book_fields:
-            setattr(book, key, value)
-
 
     if "writer_ids" in data:
         writers = get_writers_by_ids(db, data.get("writer_ids"))
