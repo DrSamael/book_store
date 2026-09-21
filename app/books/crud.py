@@ -136,8 +136,7 @@ async def update_book(db: Session, book: Book, data: dict) -> Book:
 
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND_ERROR)
-    if not book:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND_ERROR)
+
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND_ERROR)
 
